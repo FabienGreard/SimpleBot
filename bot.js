@@ -14,8 +14,8 @@ let prefix = "/";
 bot.on('ready', () => {
 
   bot.user.setStatus("online"); //dnd , online , ldle
-  //bot.user.setGame("Manger des noix");
-  bot.user.setGame("In Dev");
+  bot.user.setGame("Manger des noix");
+  //bot.user.setGame("In Dev");
 
   console.log("Oui messires ! Encore du travail ?!");
 });
