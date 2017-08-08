@@ -31,7 +31,7 @@ bot.on("message", msg => {
 
       // Command /help
      if (msg.content.startsWith(prefix + "help")) {
-      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand | random beetween 1-100 \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n leave | Clears the song queue and leaves the channel. \n clearqueue | Clears the song queue.\n /version  | Version ```");
+      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand | random beetween 1-100 \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue.\n /version  | Version ```");
       console.log("Command executed: /help")
     }
     // Command /version
