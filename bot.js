@@ -4,10 +4,12 @@ require("opusscript");
 
 // autoReconnect is enabed
 var bot = new Discord.Client({autoReconnect: true});
+var youtubeStream = require('youtube-audio-stream');
+var music = require('discord.js-music-v11');
 
-
+music(bot);
 // Set the prefix
-let prefix = '/';
+let prefix = "/";
 
 // Ready? Set? Go!
 bot.on('ready', () => {
@@ -15,6 +17,7 @@ bot.on('ready', () => {
   bot.user.setStatus("online"); //dnd , online , ldle
   //bot.user.setGame("Manger des noix");
   bot.user.setGame("In Dev");
+
   console.log("Oui messires ! Encore du travail ?!");
 });
 
@@ -29,30 +32,27 @@ bot.on("message", msg => {
 
       // Command /help
      if (msg.content.startsWith(prefix + "help")) {
-      msg.channel.send("```List of commands : \n\n /version  | Version  \n /help | Toute les commandes \n    ```");
+      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand | random beetween 1-100 \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n leave | Clears the song queue and leaves the channel. \n clearqueue | Clears the song queue.\n /version  | Version ```");
       console.log("Command executed: /help")
     }
     // Command /version
     if (msg.content.startsWith(prefix + "version")) {
-      msg.channel.send("``` Bot Discord Basic - Version 0.0.1 \n Créateur : IMAGOODGUY ```");
+      msg.channel.send("``` Bot Discord Basic - Version 1.0.0 \n Créateur : IMAGOODGUY ```");
       console.log("Command executed : /version")
     }
 
-    if (msg.content.startsWith("Bonjour")) {
-      // Command Bonjour
-     msg.reply("Hey");
-     console.log("Hey");
+    if (msg.content.startsWith(prefix +"rand")) {
+      // Command /rand
+      rand = Math.floor(Math.random() * 100);
+      msg.reply(" " + rand);
+      console.log(rand);
    }
 
-   if (msg.content.startsWith('!play')) {
-     // Command !play
-     let voiceChannel = msg.member.voiceChannel;
-
-     voiceChannel.join().then(connection =>{
-       console.log("I am now in " + voiceChannel);
-     }).catch(err => console.log(err));
+   if(msg.content.startsWith("tchoin") || msg.content.startsWith("pute")){
+     // start with choin or pute
+     msg.channel.send("TalissaLlil forcément..");
+     console.log("choin or pute");
    }
-
-});
+ });
 
 bot.login('MzQ0NDI3MTE2ODUyNDEyNDE3.DGs1EA.mSobi3ZLKdiSIzNmQQ_zv7pw1N8');
