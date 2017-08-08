@@ -17,6 +17,7 @@
     "discord.js-music-v11": "^1.3.4",
     "ffmpeg": "0.0.4",
     "opusscript": "0.0.3",
-    "youtube-audio-stream": "0.0.50"
+    "youtube-audio-stream": "0.0.50",
+    "youtube-dl": "^1.11.1"
   }
 }

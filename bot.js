@@ -4,7 +4,6 @@ require("opusscript");
 
 // autoReconnect is enabed
 var bot = new Discord.Client({autoReconnect: true});
-var youtubeStream = require('youtube-audio-stream');
 var music = require('discord.js-music-v11');
 
 music(bot);
@@ -44,13 +43,13 @@ bot.on("message", msg => {
     if (msg.content.startsWith(prefix +"rand")) {
       // Command /rand
       rand = Math.floor(Math.random() * 100);
-      msg.reply(" " + rand);
+      msg.reply("``` " + rand + " ```");
       console.log(rand);
    }
 
    if(msg.content.startsWith("tchoin") || msg.content.startsWith("pute")){
      // start with choin or pute
-     msg.channel.send("TalissaLlil forcément..");
+     msg.channel.send("``` On parle de TalissaLlil ? ```");
      console.log("choin or pute");
    }
  });
