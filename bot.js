@@ -49,7 +49,11 @@ bot.on("message", msg => {
 
    if(msg.content.startsWith("tchoin") || msg.content.startsWith("pute")){
      // start with choin or pute
-     msg.channel.send("``` On parle de TalissaLlil ? ```");
+     let role = message.guild.roles.find("name", "Inis Mom").members;
+
+     //msg.channel.send("``` On parle de TalissaLlil ? ```");
+     msg.channel.send(role);
+
      console.log("choin or pute");
    }
  });
