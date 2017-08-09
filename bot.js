@@ -33,27 +33,32 @@ bot.on('guildMemberAdd', member => {
   member.createDM().then(channel => {
     return channel.send('Bienvenue sur le serveur ! ' + member.displayName)
   }).catch(console.error)
-  // On pourrait catch l'erreur autrement ici (l'utilisateur a peut être désactivé les MP)
+
 })
 
 bot.on("message", msg => {
 
       // Command /help
      if (msg.content.startsWith(prefix + "help")) {
-      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand | random beetween 0-100 \n /roulette | russian game \n /tictac [number] | tictac game \n /version  | Version \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue. ```");
+      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand [number] | random beetween 0-100 by default \n /roulette | russian game \n /tictac [number] | tictac game \n /version  | Version \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue. ```");
       console.log("Command executed: /help")
     }
     // Command /version
     if (msg.content.startsWith(prefix + "version")) {
-      msg.channel.send("``` Bot Discord Basic - Version 1.2.0 \n Créateur : IMAGOODGUY ```");
+      msg.channel.send("``` Bot Discord Basic - Version 1.2.3 \n Créateur : IMAGOODGUY ```");
       console.log("Command executed : /version")
     }
 
     if (msg.content.startsWith(prefix +"rand")) {
       // Command /rand
-      rand = Math.floor(Math.random() * 100);
+      let rand = Math.floor(Math.random() * 100);
+
+      if(parseInt(msg.content.split(" ")[1]) > 0 && parseInt(msg.content.split(" ")[1]) < 10000000){
+        rand = Math.floor(Math.random() * parseInt(msg.content.split(" ")[1]));
+      }
+
       msg.reply(" a fait " + rand + " ");
-      console.log(rand);
+      console.log(parseInt(msg.content.split(" ")[1]));
    }
 
    if(msg.content.toLowerCase().indexOf("tchoin") !== -1 || msg.content.toLowerCase().indexOf("pute") !== -1){
@@ -71,8 +76,10 @@ bot.on("message", msg => {
       console.log(` coup restant : ${numberHitleft}, jeu : ${gameRussian}, tir : ${hit}`);
 
       if(numberHitleft === 6){ // check if start or is playing
+        numberHitleft--;
         msg.channel.send("``` Chargement du révolver.. ```");
       }else{
+        numberHitleft--;
         msg.channel.send("``` il reste " + numberHitleft + " coups ```");
       }
 
@@ -80,8 +87,7 @@ bot.on("message", msg => {
         msg.reply(" est mort... Dommage (: ");
         gameRussian = false;
       }else{
-        msg.reply(" tu n'est pas mort ! ");
-        numberHitleft--;
+        msg.reply(" tu n'es pas mort ! ");
       }
 
       if(gameRussian === false || numberHitleft === 1){ // check if end
