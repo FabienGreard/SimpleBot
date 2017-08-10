@@ -1,6 +1,6 @@
 {
   "name": "SimpleBot",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "description": "Simplbot en nodeJS",
   "repository": {
     "type": "url",

@@ -33,7 +33,7 @@ bot.on('guildMemberAdd', member => {
   member.createDM().then(channel => {
     return channel.send('Bienvenue sur le serveur ! ' + member.displayName)
   }).catch(console.error)
-
+  // On pourrait catch l'erreur autrement ici (l'utilisateur a peut être désactivé les MP)
 })
 
 bot.on("message", msg => {
@@ -45,7 +45,7 @@ bot.on("message", msg => {
     }
     // Command /version
     if (msg.content.startsWith(prefix + "version")) {
-      msg.channel.send("``` Bot Discord Basic - Version 1.2.3 \n Créateur : IMAGOODGUY ```");
+      msg.channel.send("``` Bot Discord Basic - Version 1.2.6 \n Créateur : IMAGOODGUY ```");
       console.log("Command executed : /version")
     }
 
@@ -111,7 +111,7 @@ bot.on("message", msg => {
         }
 
         //set the board with the player actions
-        if(gameBoard[number -1] != "X" || gameBoard[number -1] != "O"){
+        if(gameBoard[number -1] != "X" && gameBoard[number -1] != "O"){
           gameBoard[number -1] = lastPion;
         }else{
           msg.channel.send("``` Placement occupé ```");
@@ -130,12 +130,28 @@ bot.on("message", msg => {
           gameTicTac = true;
           gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
           lastPion = "X";
+        }else if(checkIfFinish()){
+          msg.channel.send("``` Egalité ```");
+          msg.channel.send("``` La partie est terminée ```");
+          gameTicTac = true;
+          gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+          lastPion = "X";
         }
       }else{
         msg.channel.send("``` Chiffre manquant ou érronné (1-9) ```");
       }
    }
 
+   function checkIfFinish(){
+     let bool = false;
+     for(let i = 1; i < 10; i++){
+       if(gameBoard.join(" ").indexOf(i.toString()) === -1){
+         bool = true;
+       }
+     }
+
+     return bool
+   }
    function showBoard(){ // showBoard
      msg.channel.send("``` " + gameBoard[0] + " | " + gameBoard[1] + " | " + gameBoard[2] + " \n " + gameBoard[3] + " | " + gameBoard[4] + " | " + gameBoard[5] + " \n " + gameBoard[6] + " | " + gameBoard[7] + " | " + gameBoard[8] + " ```");
    }
