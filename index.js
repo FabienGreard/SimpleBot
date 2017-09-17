@@ -13,16 +13,18 @@ const ytdl = require('ytdl-core');
  * 							anyoneCanSkip: Allow anybody to skip the song.
  * 							clearInvoker: Clear the command message.
  * 							volume: The default volume of the player.
+ *							channel: Name of default voice channel to join.
  */
 module.exports = function (client, options) {
 	// Get all options.
-	let PREFIX = (options && options.prefix) || '!';
-	let PREFIX_2 = '/';
+  let PREFIX = (options && options.prefix) || '!';
+  let PREFIX_2 = '/';
 	let GLOBAL = (options && options.global) || false;
 	let MAX_QUEUE_SIZE = (options && options.maxQueueSize) || 20;
 	let DEFAULT_VOLUME = (options && options.volume) || 50;
 	let ALLOW_ALL_SKIP = (options && options.anyoneCanSkip) || false;
 	let CLEAR_INVOKER = (options && options.clearInvoker) || false;
+	let CHANNEL = (options && options.channel) || false;
 
 	// Create an object of queues.
 	let queues = {};
@@ -69,7 +71,7 @@ module.exports = function (client, options) {
 	 * @returns {boolean} -
 	 */
 	function isAdmin(member) {
-		return member.hasPermission("ADMINISTRATOR") || client.users.get("211068149594849290");
+		return member.hasPermission("ADMINISTRATOR");
 	}
 
 	/**
@@ -110,7 +112,7 @@ module.exports = function (client, options) {
 	 */
 	function play(msg, suffix) {
 		// Make sure the user is in a voice channel.
-		if (msg.member.voiceChannel === undefined) return msg.channel.send(wrap('You\'re not in a voice channel.'));
+		if (!CHANNEL && msg.member.voiceChannel === undefined) return msg.channel.send(wrap('You\'re not in a voice channel.'));
 
 		// Make sure the suffix exists.
 		if (!suffix) return msg.channel.send(wrap('No video specified!'));
@@ -130,7 +132,7 @@ module.exports = function (client, options) {
 				searchstring = 'gvsearch1:' + suffix;
 			}
 
-			YoutubeDL.getInfo(searchstring, ['-q', '--no-warnings', '--force-ipv4'], {maxBuffer: Infinity}, (err, info) => {
+			YoutubeDL.getInfo(searchstring, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
 				// Verify the info.
 				if (err || info.format_id === undefined || info.format_id.startsWith('0')) {
 					return response.edit(wrap('Invalid video!'));
@@ -342,8 +344,15 @@ module.exports = function (client, options) {
 			// Join the voice channel if not already in one.
 			const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
 			if (voiceConnection === null) {
+				if (CHANNEL) {
+					msg.guild.channels.find('name', CHANNEL).join().then(connection => {
+						resolve(connection);
+					}).catch((error) => {
+						console.log(error);
+					});
+
 				// Check if the user is in a voice channel.
-				if (msg.member.voiceChannel) {
+				} else if (msg.member.voiceChannel) {
 					msg.member.voiceChannel.join().then(connection => {
 						resolve(connection);
 					}).catch((error) => {

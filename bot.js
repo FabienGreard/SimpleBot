@@ -2,6 +2,11 @@
 let Discord = require("discord.js");
 require("opusscript");
 
+let http = require("http");
+let https = require("https");
+let request = require('request');
+
+
 // autoReconnect is enabed
 let bot = new Discord.Client({autoReconnect: true});
 let music = require('discord.js-music-v11');
@@ -15,37 +20,45 @@ let gameTicTac = true;
 let gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 let lastPion = "X";
 
-music(bot);
 // Set the prefix
 let prefix = "/";
 
+
 // Ready? Set? Go!
 bot.on('ready', () => {
+
+  var default_channel = client.channels.get("name", "bot").id;
 
   bot.user.setStatus("online"); //dnd , online , ldle
   //bot.user.setGame("Manger des noix");
   bot.user.setGame("In Dev");
 
+  bot.send(default_channel, "Le bot est lancé");
+
   console.log("Oui messires ! Encore du travail ?!");
 });
 
-bot.on('guildMemberAdd', member => {
-  member.createDM().then(channel => {
-    return channel.send('Bienvenue sur le serveur ! ' + member.displayName)
-  }).catch(console.error)
-  // On pourrait catch l'erreur autrement ici (l'utilisateur a peut être désactivé les MP)
-})
 
 bot.on("message", msg => {
 
+      if (msg.content.startsWith(prefix + "server")) {
+        // Command server
+      request.get('http://live.albiononline.com/status.txt')
+        .on('response', function(response) {
+          console.log(response.statusCode); // 200
+          console.log(response.headers['content-type']); // 'image/png'
+          console.log(response);
+        })
+      }
+
       // Command /help
      if (msg.content.startsWith(prefix + "help")) {
-      msg.channel.send("```List of commands : \n\n /help | list all commands \n /rand [number] | random beetween 0-100 by default \n /roulette | russian game \n /tictac [number] | tictac game \n /version  | Version \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue. ```");
+      msg.channel.send("```List of commands : \n\n /help | list all commands \n /status | get the albion server info \n /rand [number] | random beetween 0-100 by default \n /roulette | russian game \n /tictac [number] | tictac game \n /version  | Version \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue. ```");
       console.log("Command executed: /help")
     }
     // Command /version
     if (msg.content.startsWith(prefix + "version")) {
-      msg.channel.send("``` Bot Discord Basic - Version 1.2.6 \n Créateur : IMAGOODGUY ```");
+      msg.channel.send("``` Bot Discord Basic - Version 1.4.0 \n Créateur : IMAGOODGUY ```");
       console.log("Command executed : /version")
     }
 
@@ -103,18 +116,27 @@ bot.on("message", msg => {
       let number = msg.content.split(" ")[1];
       console.log(number);
 
-      if(number > 0 && number < 10){
-        if(lastPion == "X"){ // choose wich pion has to be placed
-          lastPion = "O"
-        }else{
-          lastPion = "X"
-        }
-
         //set the board with the player actions
         if(gameBoard[number -1] != "X" && gameBoard[number -1] != "O"){
           gameBoard[number -1] = lastPion;
+
+          if(number > 0 && number < 10){
+            if(lastPion == "X"){ // choose wich pion has to be placed
+              lastPion = "O"
+            }else{
+              lastPion = "X"
+            }
+
         }else{
           msg.channel.send("``` Placement occupé ```");
+        }
+
+        if(checkIfFinish()){
+          msg.channel.send("``` Egalité ```");
+          msg.channel.send("``` La partie est terminée ```");
+          gameTicTac = true;
+          gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+          lastPion = "X";
         }
 
         if(gameTicTac != false && gameBoard.join(" ").indexOf("X") === -1){//check if the game has start
@@ -130,12 +152,6 @@ bot.on("message", msg => {
           gameTicTac = true;
           gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
           lastPion = "X";
-        }else if(checkIfFinish()){
-          msg.channel.send("``` Egalité ```");
-          msg.channel.send("``` La partie est terminée ```");
-          gameTicTac = true;
-          gameBoard = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-          lastPion = "X";
         }
       }else{
         msg.channel.send("``` Chiffre manquant ou érronné (1-9) ```");
@@ -145,7 +161,7 @@ bot.on("message", msg => {
    function checkIfFinish(){
      let bool = false;
      for(let i = 1; i < 10; i++){
-       if(gameBoard.join(" ").indexOf(i.toString()) === -1){
+       if(gameBoard.join(" ").indexOf(i) === -1){
          bool = true;
        }
      }
@@ -170,4 +186,7 @@ bot.on("message", msg => {
 
  });
 
+ music(Bot, {
+  channel: 'Music'    // Name of voice channel to join. If omitted, will instead join user's voice channel.
+ });
 bot.login('MzQ0NDI3MTE2ODUyNDEyNDE3.DGs1EA.mSobi3ZLKdiSIzNmQQ_zv7pw1N8');
