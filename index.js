@@ -32,9 +32,17 @@ module.exports = function (client, options) {
 	// Catch message events.
 	client.on('message', msg => {
 		const message = msg.content.trim();
+    const default_channel = client.channels.get("358894363524464640");
+
+    function isChannel(){
+      if(msg.channel != default_channel){
+        msg.channel.send("``` Vous êtes dans le mauvais channel, veuillez vous rendre sur le channel 'bot' ```");
+      }
+      return (msg.channel != default_channel)? false : true;
+    }
 
 		// Check if the message is a command.
-		if (message.toLowerCase().startsWith(PREFIX.toLowerCase()) || message.toLowerCase().startsWith(PREFIX_2.toLowerCase())) {
+		if (message.toLowerCase().startsWith(PREFIX.toLowerCase()) || message.toLowerCase().startsWith(PREFIX_2.toLowerCase()) && isChannel()) {
 			// Get the command and suffix.
 			const command = message.substring(PREFIX.length).split(/[ \n]/)[0].toLowerCase().trim();
 			const suffix = message.substring(PREFIX.length + command.length).trim();

@@ -27,13 +27,14 @@ let prefix = "/";
 // Ready? Set? Go!
 bot.on('ready', () => {
 
-  var default_channel = bot.channels.get("358894363524464640");
+  //const default_channel = bot.channels.get("358894363524464640");
+  //console.log(default_channel);
+
+  //default_channel.send("Le bot est lancé");
 
   bot.user.setStatus("online"); //dnd , online , ldle
-  //bot.user.setGame("Manger des noix");
-  bot.user.setGame("In Dev");
-
-  bot.send(default_channel, "Le bot est lancé");
+  bot.user.setGame("Manger des noix");
+  //bot.user.setGame("In Dev");
 
   console.log("Oui messires ! Encore du travail ?!");
 });
@@ -41,7 +42,16 @@ bot.on('ready', () => {
 
 bot.on("message", msg => {
 
-      if (msg.content.startsWith(prefix + "server")) {
+      const default_channel = bot.channels.get("358894363524464640");
+
+      function isChannel(){
+        if(msg.channel != default_channel){
+          msg.channel.send("``` Vous êtes dans le mauvais channel, veuillez vous rendre sur le channel 'bot' ```");
+        }
+        return (msg.channel != default_channel)? false : true;
+      }
+
+      if (msg.content.startsWith(prefix + "server") && isChannel()) {
         // Command server
       request.get('http://live.albiononline.com/status.txt')
         .on('response', function(response) {
@@ -52,17 +62,17 @@ bot.on("message", msg => {
       }
 
       // Command /help
-     if (msg.content.startsWith(prefix + "help")) {
+     if (msg.content.startsWith(prefix + "help") && isChannel()) {
       msg.channel.send("```List of commands : \n\n /help | list all commands \n /status | get the albion server info \n /rand [number] | random beetween 0-100 by default \n /roulette | russian game \n /tictac [number] | tictac game \n /version  | Version \n !play <url|search> | Play a video/music  \n !skip [number] | Skip some number of songs. Will skip 1 song if a number is not specified. \n !queue | Display the current queue. \n !pause | Pause music playback. \n !resume | Resume music playback \n !leave | Clears the song queue and leaves the channel. \n !clearqueue | Clears the song queue. ```");
       console.log("Command executed: /help")
     }
     // Command /version
-    if (msg.content.startsWith(prefix + "version")) {
+    if (msg.content.startsWith(prefix + "version") && isChannel()) {
       msg.channel.send("``` Bot Discord Basic - Version 1.4.0 \n Créateur : IMAGOODGUY ```");
       console.log("Command executed : /version")
     }
 
-    if (msg.content.startsWith(prefix +"rand")) {
+    if (msg.content.startsWith(prefix +"rand") && isChannel()) {
       // Command /rand
       let rand = Math.floor(Math.random() * 100);
 
@@ -81,8 +91,8 @@ bot.on("message", msg => {
      console.log(msg.content.toLowerCase());
    }
 
-   if(msg.content.startsWith(prefix + "roulette")){
-     // Comand /roulette
+   if(msg.content.startsWith(prefix + "roulette") && isChannel()){
+     // Command /roulette
 
      let hit = Math.floor(Math.random() * numberHitleft) === 0
 
@@ -111,7 +121,7 @@ bot.on("message", msg => {
 
    }
 
-   if(msg.content.startsWith(prefix + "tictac")){
+   if(msg.content.startsWith(prefix + "tictac") && isChannel()){
      // Command /tictac
       let number = msg.content.split(" ")[1];
       console.log(number);
@@ -168,6 +178,7 @@ bot.on("message", msg => {
 
      return bool
    }
+
    function showBoard(){ // showBoard
      msg.channel.send("``` " + gameBoard[0] + " | " + gameBoard[1] + " | " + gameBoard[2] + " \n " + gameBoard[3] + " | " + gameBoard[4] + " | " + gameBoard[5] + " \n " + gameBoard[6] + " | " + gameBoard[7] + " | " + gameBoard[8] + " ```");
    }
@@ -183,7 +194,6 @@ bot.on("message", msg => {
        return false
      }
    }
-
  });
 
  music(bot, {
