@@ -186,7 +186,7 @@ bot.on("message", msg => {
 
  });
 
- music(Bot, {
+ music(bot, {
   channel: 'Music'    // Name of voice channel to join. If omitted, will instead join user's voice channel.
  });
 bot.login('MzQ0NDI3MTE2ODUyNDEyNDE3.DGs1EA.mSobi3ZLKdiSIzNmQQ_zv7pw1N8');
