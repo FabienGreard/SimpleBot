@@ -27,7 +27,7 @@ let prefix = "/";
 // Ready? Set? Go!
 bot.on('ready', () => {
 
-  var default_channel = bot.channels.get("name", "bot").id;
+  var default_channel = bot.channels.get("358894363524464640");
 
   bot.user.setStatus("online"); //dnd , online , ldle
   //bot.user.setGame("Manger des noix");
